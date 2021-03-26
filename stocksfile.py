@@ -2,7 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import json
 import pandas as pd
+import datetime
 
+timeStart = datetime.datetime.now()
 
 def googleStrToFloat (googlePriceStr):
     googlePriceFloat = float(googlePriceStr.replace(".","").replace(",","."))
@@ -217,13 +219,19 @@ stockFile.close()
 
 stockH52WkComparisonList=[]
 stockL52WkComparisonList=[]
+
 i = 0
 while i < len(stockPriceList):
-   stockH52WkComparison = (stockPriceList[i] - stockHigh52WkList[i])/stockHigh52WkList[i]*100
-   stockL52WkComparison = (stockPriceList[i] - stockLow52WkList[i])/stockLow52WkList[i]*100
-   i += 1
-   stockL52WkComparisonList.append(stockL52WkComparison)
-   stockH52WkComparisonList.append(stockH52WkComparison)
+    if stockHigh52WkList[i] != None:
+        stockH52WkComparison = (stockPriceList[i] - stockHigh52WkList[i])/stockHigh52WkList[i]*100
+        stockL52WkComparison = (stockPriceList[i] - stockLow52WkList[i])/stockLow52WkList[i]*100
+    else:
+        stockH52WkComparison = None
+        stockL52WkComparison = None
+
+    i += 1
+    stockL52WkComparisonList.append(stockL52WkComparison)
+    stockH52WkComparisonList.append(stockH52WkComparison)
 
 
 
@@ -232,6 +240,11 @@ df = pd.DataFrame(list(zip(revolutStockList,stockSymbolList,stockPriceList,stock
 print(df)
 
 df.to_csv('stocksInfoTable.csv', index=False, encoding='utf-8')
+
+
+timeEnd = datetime.datetime.now()
+print(timeStart)
+print(timeEnd)
 
 #print(df.loc[df['Name'] == 'TXMD'])
 #print(df['Name'][1])
