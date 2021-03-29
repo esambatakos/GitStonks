@@ -175,7 +175,7 @@ def getRevolutStockList():
 
     class1 = 'wp-block-table'
 
-    num = 825*7 + 1
+    num = 1
 
     while True:
         try:
