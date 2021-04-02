@@ -4,6 +4,7 @@ import json
 import pandas as pd
 import datetime
 
+
 timeStart = datetime.datetime.now()
 
 def googleStrToFloat (googleValueStr):
@@ -12,7 +13,7 @@ def googleStrToFloat (googleValueStr):
     else:
         googleValueFloat = float(googleValueStr.replace(".","").replace(",",".").replace("%",""))
     return googleValueFloat
-
+#dictionary + function replacing the key with its assigned value ex: {".":"",",":"."}
 
 def stockListToStockInfoLists():
     i = 0
@@ -26,6 +27,7 @@ def getStockInfoLists(stockSymbol,stockExchange):
     googleSymbClass = 'WuDkNe'
     googlePricID = 'vWLAgc'
     google52WkClass = "iyjjgb"
+    GOOGLE_TABLE_INFO_SLOTS = 8
 
     URL= 'https://www.google.com/search?q='+stockSymbol+'+stock+'+stockExchange+'&oq='+stockSymbol+'+stock+'+stockExchange+'&aqs=chrome.1.69i57j0i22i30.7160j1j7&sourceid=chrome&ie=UTF-8'
 
@@ -55,7 +57,7 @@ def getStockInfoLists(stockSymbol,stockExchange):
 
     googleInfo = soup.select("td."+google52WkClass)
     if any(googleInfo):
-        if len(googleInfo) < 8:
+        if len(googleInfo) < GOOGLE_TABLE_INFO_SLOTS:
             high52Wk = None
             low52Wk = None
             peRatio = None
@@ -165,6 +167,9 @@ def getStockLow52Wk(stockName):
 
 
 def getRevolutStockList():
+
+    STARTING_ROW = 88
+
     URL= 'https://globefunder.com/revolut-stocks-list/#Revolut_list_of_stocks'
 
     headers = {"User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.190 Safari/537.36'}
@@ -175,13 +180,13 @@ def getRevolutStockList():
 
     class1 = 'wp-block-table'
 
-    num = 1
+    num = STARTING_ROW * 7 - 7
 
     while True:
         try:
-            stockNameRev = soup.select("figure."+class1)[0].select("tbody")[0].select('td')[num].text
-            stockSymbol = soup.select("figure."+class1)[0].select("tbody")[0].select('td')[num+1].text
-            stockExchange = soup.select("figure."+class1)[0].select("tbody")[0].select('td')[num+5].text
+            stockNameRev = soup.select("figure."+class1)[0].select("tbody")[0].select('td')[num+1].text
+            stockSymbol = soup.select("figure."+class1)[0].select("tbody")[0].select('td')[num+2].text
+            stockExchange = soup.select("figure."+class1)[0].select("tbody")[0].select('td')[num+6].text
             print(stockNameRev)
             print(stockSymbol)
             print(stockExchange)
